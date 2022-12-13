@@ -10,16 +10,21 @@
 
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {NavigationContainer, ParamListBase} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useState} from 'react';
 import {Image, StyleSheet, useColorScheme} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import Home from './src/screen/Home';
 
 import home from './src/assets/home.png';
+
+import Home from './src/screen/Home';
 import Favourite from './src/screen/Favourite';
+import Login from './src/screen/Login';
+
+import {Provider} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {setName, setAge} from './src/redux/action';
+import {Store} from './src/redux/store';
 
 export interface RouteParams extends ParamListBase {
   Favourite: {ItemName: string; ItemId: number};
@@ -42,30 +47,23 @@ const App = () => {
   // const Tab = createBottomTabNavigator();
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({route, navigation}) => ({
-          // tabBarIcon: ({focused, size, color}) => {
-          // },
-        })}>
-        <Tab.Screen
-          name="Home"
-          component={Home}
-          options={
-            {
-              // tabBarIcon: ({color}) => (
-              //   <FontAwesome5 icon="fa-solid fa-check-square" />
-              // ),
-            }
-          }
-        />
-        <Tab.Screen
-          name="Favourite"
-          component={Favourite}
-          initialParams={{ItemName: 'passaggio dati', ItemId: 12}}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <Provider store={Store}>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({route, navigation}) => ({
+            // tabBarIcon: ({focused, size, color}) => {
+            // },
+          })}>
+          <Tab.Screen name="Login" component={Login} />
+          <Tab.Screen name="Home" component={Home} />
+          <Tab.Screen
+            name="Favourite"
+            component={Favourite}
+            initialParams={{ItemName: 'passaggio dati', ItemId: 12}}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </Provider>
     // <SafeAreaView>
     //   <StatusBar
     //     barStyle={isDarkMode ? 'light-content' : 'dark-content'}

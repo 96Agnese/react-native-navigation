@@ -4,11 +4,16 @@ import FontAwesome, {
   Pressable,
   Modal,
   TextInput,
+  Alert,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Theme from '../styles/Theme';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RouteParams} from '../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ButtonCustom from '../components/button';
+import {useDispatch, useSelector} from 'react-redux';
+import {setName} from '../redux/action';
 
 type HomeProps = NativeStackScreenProps<RouteParams, 'Home'>;
 
@@ -16,7 +21,11 @@ const Home = ({navigation, route}: HomeProps) => {
   const [showWarming, setShowWarning] = useState(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
 
-  const [name, setName] = useState('');
+  const {name, age} = useSelector(state => state.userReducer);
+  const dispatch = useDispatch();
+
+  // const [name, setName] = useState('');
+  // const [age, setAge] = useState('');
 
   const onPressHandler = () => {
     navigation.navigate('Favourite');
@@ -40,6 +49,51 @@ const Home = ({navigation, route}: HomeProps) => {
       // );
     }
   };
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = () => {
+    try {
+      AsyncStorage.getItem('userData').then(value => {
+        if (value != null) {
+          let user = JSON.parse(value);
+          name(user.Name);
+          age(user.Age);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateData = async () => {
+    if (name.length === 0) {
+      Alert.alert('non corretto');
+    } else {
+      try {
+        var user = {Name: name};
+        await AsyncStorage.mergeItem('userData', JSON.stringify(user));
+        Alert.alert('success!');
+      } catch (error) {
+        console.log('error');
+      }
+    }
+  };
+
+  const removeData = async () => {
+    if (name.length === 0) {
+      Alert.alert('non corretto');
+    } else {
+      try {
+        await AsyncStorage.removeItem('userData');
+        navigation.navigate('Login');
+      } catch (error) {
+        console.log('error');
+      }
+    }
+  };
+
   return (
     <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
       <Text style={{fontSize: 30, fontWeight: 'bold'}}>HOME</Text>
@@ -54,7 +108,28 @@ const Home = ({navigation, route}: HomeProps) => {
       </Pressable>
       {/* //! params */}
       <Text style={{fontSize: 25}}>{route.params?.message}</Text>
-      <View style={{alignItems: 'center'}}>
+      <Text style={{fontWeight: 'bold', fontSize: 20}}>Welcome {name}</Text>
+      <Text style={{fontWeight: 'bold', fontSize: 20}}>Age {age}</Text>
+      <TextInput
+        value={name}
+        onChangeText={value => dispatch(setName(value))}
+        placeholder="scrivi il nome"
+        style={{
+          borderWidth: 1,
+          borderColor: `#20b2aa`,
+          padding: 10,
+          borderRadius: 8,
+          backgroundColor: '#fff',
+          marginTop: 16,
+          minWidth: '50%',
+          marginBottom: 24,
+        }}
+      />
+      <ButtonCustom title="UPDATE" onPress={updateData} />
+      <View style={{marginVertical: 8}}>
+        <ButtonCustom title="DELETE" onPress={removeData} />
+      </View>
+      {/* <View style={{alignItems: 'center'}}>
         <Modal
           hardwareAccelerated
           animationType="fade"
@@ -144,7 +219,7 @@ const Home = ({navigation, route}: HomeProps) => {
         </Pressable>
 
         {submitted ? <Text>Il tuo nome è {name} </Text> : null}
-      </View>
+      </View> */}
     </View>
   );
 };
