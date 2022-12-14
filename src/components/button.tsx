@@ -5,12 +5,17 @@ import {Button, ButtonProps} from 'react-native-paper';
 interface ButtonCustomProps extends ButtonProps {
   title: string;
   onPress: () => void;
+  colorBg: string;
 }
 
-const ButtonCustom: FC<ButtonCustomProps> = ({title, onPress}) => {
+const ButtonCustom: FC<ButtonCustomProps> = ({
+  title,
+  onPress,
+  colorBg = '#191970',
+}) => {
   return (
     <Button
-      buttonColor={`#ff69b4`}
+      buttonColor={colorBg}
       onPress={onPress}
       mode="contained"
       textColor="white">

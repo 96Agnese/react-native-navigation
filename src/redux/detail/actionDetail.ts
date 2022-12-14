@@ -1,18 +1,14 @@
 import {AnyAction, Dispatch} from 'redux';
 
-//!dichiaro le azioni
+export const GET_PRODUCT_DETAIL = 'GET_PRODUCT';
 
-export const SET_USER_NAME = 'SET_USER_NAME';
-export const SET_USER_AGE = 'SET_USER_AGE';
-
-export const INCREASE_AGE = 'INCREASE_AGE';
-
-export const GET_ALBUM = 'GET_ALBUM';
+export const INCREASE_COUNT = 'INCREASE';
+export const DECREMENT_COUNT = 'DECREMENT_COUNT';
 
 // const API_URL = 'https://jsonplaceholder.typicode.com/todos';
-const API_URL = 'https://jsonplaceholder.typicode.com/photos';
+const API_URL = 'https://fakestoreapi.com/products/';
 
-export const getAlbum = () => {
+export const getProduct = () => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
       const result = await fetch(API_URL, {
@@ -24,7 +20,7 @@ export const getAlbum = () => {
       const json = await result.json();
       if (json) {
         dispatch({
-          type: GET_ALBUM,
+          type: GET_PRODUCT_DETAIL,
           payload: json,
         });
       } else {
@@ -35,24 +31,14 @@ export const getAlbum = () => {
     }
   };
 };
-
-export const setName = (name: string) => {
+export const decrementCount = () => {
   return {
-    type: SET_USER_NAME,
-    payload: name,
+    type: DECREMENT_COUNT,
   };
 };
 
-export const setAge = (age: number) => {
+export const increaseCount = () => {
   return {
-    type: SET_USER_AGE,
-    payload: age,
-  };
-};
-
-export const increaseAge = (age: number) => {
-  return {
-    type: INCREASE_AGE,
-    payload: age,
+    type: INCREASE_COUNT,
   };
 };
