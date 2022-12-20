@@ -31,8 +31,13 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import MyTabs from './src/BottomTabs/MainTabs';
 import MainTabs from './src/BottomTabs/MainTabs';
 import Map from './src/screen/Map';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import ToDo from './src/screen/ToDo';
+import Task from './src/screen/Task';
 
 export interface RouteParams extends ParamListBase {
+  Task: undefined;
+  ToDo: undefined;
   Favourite: {ItemName: string; ItemId: number};
   Home: {message: string; title: string; thumbnailUrl: string};
   DetailAlbum: {
@@ -43,8 +48,31 @@ export interface RouteParams extends ParamListBase {
     category: string;
   };
 }
+const RootStack = createNativeStackNavigator<RouteParams>();
+//! bottom tab
+const Tab = createBottomTabNavigator();
 
-const Stack = createNativeStackNavigator<RouteParams>();
+function HomeTabs() {
+  return (
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        tabBarLabelStyle: {fontSize: 16},
+        tabBarInactiveTintColor: 'black',
+        tabBarActiveTintColor: 'blue',
+        tabBarStyle: {
+          backgroundColor: 'white',
+          height: 100,
+        },
+      })}>
+      <Tab.Screen name="Home" component={Home} options={{}}></Tab.Screen>
+      <Tab.Screen name="ToDo" component={ToDo}></Tab.Screen>
+      <Tab.Screen
+        name="Favourite"
+        component={Favourite}
+        initialParams={{ItemName: 'passaggio dati', ItemId: 12}}></Tab.Screen>
+    </Tab.Navigator>
+  );
+}
 
 const App = () => {
   const [name, setName] = useState('');
@@ -60,16 +88,28 @@ const App = () => {
   return (
     <Provider store={Store}>
       <NavigationContainer>
-        <Stack.Navigator
+        <RootStack.Navigator
           screenOptions={({route, navigation}) => ({
             // tabBarIcon: ({focused, size, color}) => {
             // },
           })}>
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen
-            name="Home"
-            component={Home}
+          <RootStack.Screen
+            name="Login"
+            component={Login}
             options={{
+              headerShadowVisible: false,
+              headerBackTitleVisible: false,
+              headerTitle: () => <Text style={{fontSize: 20}}>Login</Text>,
+            }}
+          />
+          <RootStack.Screen
+            name="Home"
+            component={HomeTabs}
+            options={{
+              headerStyle: {
+                backgroundColor: '#faf0e6',
+              },
+
               headerShadowVisible: false,
               headerBackTitleVisible: false,
               headerTitle: () => (
@@ -77,12 +117,8 @@ const App = () => {
               ),
             }}
           />
-          <Stack.Screen
-            name="Favourite"
-            component={Favourite}
-            initialParams={{ItemName: 'passaggio dati', ItemId: 12}}
-          />
-          <Stack.Screen
+
+          <RootStack.Screen
             name="DetailAlbum"
             component={DetailAlbum}
             options={{
@@ -92,7 +128,16 @@ const App = () => {
 
             // initialParams={{ItemName: 'passaggio dati', ItemId: 12}}
           />
+          <RootStack.Screen
+            name="Task"
+            component={Task}
+            options={{
+              headerBackTitleVisible: false,
+              headerShadowVisible: false,
+            }}
 
+            // initialParams={{ItemName: 'passaggio dati', ItemId: 12}}
+          />
           {/* <Stack.Screen
             name="MainTabs"
             component={MainTabs}
@@ -101,7 +146,7 @@ const App = () => {
               headerLeft: () => false,
             }}
           /> */}
-        </Stack.Navigator>
+        </RootStack.Navigator>
       </NavigationContainer>
     </Provider>
     // <SafeAreaView>

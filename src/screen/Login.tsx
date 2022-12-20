@@ -6,15 +6,20 @@ import {
   Alert,
   StyleSheet,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Button from '../components/button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {setAge, setName} from '../redux/action';
 import {UserState} from '../redux/reducer';
 import {StoreState} from '../redux/store';
+import ButtonCustom from '../components/button';
+
+import * as Animatable from 'react-native-animatable';
 
 const Login = ({navigation}) => {
+  const [isValid, setIsValid] = useState<boolean>(false);
+
   const {name, age} = useSelector<StoreState, UserState>(
     state => state.userReducer,
   );
@@ -38,11 +43,60 @@ const Login = ({navigation}) => {
     }
   };
 
+  //!error
+  const Error = ({display = false}) => {
+    const viewElement = useRef(null);
+    useEffect(() => {
+      if (display) {
+        viewElement.current.animate('shake', 500, 'linear');
+      } else {
+        viewElement.current.animate('bounceOut', 50);
+      }
+    }, [display]);
+
+    const viewStyle = [style.error, {opacity: 0}];
+
+    if (display) {
+      viewStyle.push({opacity: 1});
+    }
+
+    return (
+      <Animatable.View
+        animation="shake"
+        duration={500}
+        easing="linear"
+        ref={viewElement}>
+        <Text style={style.error}>XXX</Text>
+      </Animatable.View>
+    );
+  };
+
+  const Input = ({label, error, ...props}) => {
+    return (
+      <View style={{height: 50, width: '100%', backgroundColor: 'pink'}}>
+        <Text>{label}</Text>
+        <View>
+          <TextInput autoCapitalize="none" {...props} />
+          <Error display={error} />
+        </View>
+      </View>
+    );
+  };
+  // useEffect(() => {
+  //   if (name !== '' || name.includes('@')) {
+  //     setIsValid(false);
+  //   } else {
+  //     Alert.alert('Non hai riempito i campi');
+
+  //     setIsValid(false);
+  //   }
+  // }, [name]);
+
   //! se non completo i campi mi da un alert
   const setData = async () => {
     console.log({name, age});
     if (name.length === 0 || age === 0) {
-      Alert.alert('non corretto');
+      Alert.alert('Non hai riempito i campi');
     } else {
       try {
         setName(name);
@@ -57,34 +111,78 @@ const Login = ({navigation}) => {
       }
     }
   };
+  // const validateName = (name: string) => {
+  //   if (name !== '') {
+  //     let re = /@+/;
+  //     let cond = re.test(name);
+  //     if (!cond) {
+  //       return (
+  //         <View>
+  //           <Text style={{color: 'red'}}>Email should contain @ </Text>
+  //         </View>
+  //       );
+  //     } else {
+  //       return <View> </View>;
+  //     }
+  //   } else {
+  //     return (
+  //       <View>
+  //         <Text style={{color: 'red'}}>Email is required </Text>
+  //       </View>
+  //     );
+  //   }
+  // };
+
   const style = StyleSheet.create({
     input: {
       borderWidth: 1,
-      borderColor: `#20b2aa`,
-      padding: 10,
+      borderColor: 'grey',
+      padding: 16,
       borderRadius: 8,
       backgroundColor: '#fff',
       marginTop: 16,
     },
+    error: {
+      height: 30,
+      width: 30,
+      backgroundColor: 'red',
+      borderRadius: 8,
+    },
   });
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: `#e0ffff`}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{padding: 16}}>
-        <Text style={{fontSize: 20}}>Async storage and Redux</Text>
+        <Text style={{fontSize: 16, fontWeight: 'bold'}}>LOGIN</Text>
+        {/* <Input
+          // error={submit.value}
+          label="usarname"
+          placeholder="ksks"
+          // onChangeText={usarname.set}
+        /> */}
         <TextInput
+          placeholderTextColor={'grey'}
+          value={name}
+          autoCapitalize={'none'}
+          keyboardType="email-address"
           onChangeText={value => dispatch(setName(value))}
-          placeholder="scrivi il nome"
+          placeholder="NOME"
           style={style.input}
         />
+        {/* {validateName(name)} */}
         <TextInput
+          placeholderTextColor={'grey'}
           onChangeText={value => dispatch(setAge(Number(value)))}
-          placeholder="age"
+          placeholder="ETA'"
           style={style.input}
         />
-        <View style={{alignItems: 'center', marginTop: 16}}>
-          <Button title="Login" onPress={setData} />
-        </View>
+      </View>
+      <View
+        style={{
+          alignItems: 'center',
+          marginHorizontal: 16,
+        }}>
+        <ButtonCustom title="Login" onPress={() => setData()} />
       </View>
     </SafeAreaView>
   );

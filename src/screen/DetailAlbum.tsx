@@ -25,6 +25,7 @@ import {
 } from '../redux/detail/actionDetail';
 import {UserState} from '../redux/reducer';
 import {counter} from '@fortawesome/fontawesome-svg-core';
+import ButtonCategory from '../components/buttonCategory';
 
 type DetailProps = NativeStackScreenProps<RouteParams, 'DetailAlbum'>;
 
@@ -62,11 +63,11 @@ const DetailAlbum = ({route, navigation}: DetailProps) => {
       marginTop: 16,
     },
     qtk: {
-      marginHorizontal: 16,
       fontSize: 18,
       marginTop: 16,
       fontWeight: 'bold',
       marginBottom: 16,
+      textAlign: 'center',
     },
     circleStyl: {
       borderWidth: 1,
@@ -79,18 +80,24 @@ const DetailAlbum = ({route, navigation}: DetailProps) => {
     price: {
       fontSize: 24,
       fontWeight: 'bold',
+      textAlign: 'center',
     },
     directionCount: {
       flexDirection: 'row',
       alignItems: 'center',
       marginHorizontal: 16,
+      justifyContent: 'center',
+    },
+    categoryStyle: {
+      fontWeight: 'bold',
+      fontSize: 16,
     },
   });
 
   return (
-    <ScrollView style={{backgroundColor: 'white', flex: 1}}>
-      <SafeAreaView>
-        <View style={{alignItems: 'center', marginTop: 40}}>
+    <ScrollView style={{flex: 1}}>
+      <SafeAreaView style={{backgroundColor: 'white'}}>
+        <View style={{alignItems: 'center', marginTop: 20}}>
           <ImageBackground
             resizeMode="contain"
             source={{uri: route?.params.image}}
@@ -100,30 +107,46 @@ const DetailAlbum = ({route, navigation}: DetailProps) => {
         <Text style={style.title}>{route?.params.title.toUpperCase()}</Text>
         <Text style={style.productStyle}>Product info</Text>
         <Text style={style.description}>{route?.params.description}</Text>
-        <Text style={{marginHorizontal: 16}}>
-          Category: {route?.params.category}
-        </Text>
+
+        <View style={{marginHorizontal: 16, marginTop: 16}}>
+          {/* //!lista */}
+          <Text>Lista</Text>
+          <View style={{flexDirection: 'row', marginTop: 8}}>
+            <ButtonCategory
+              // onPress={() => setOnClick(!onClick)}
+              title="colore"
+            />
+            <View style={{marginHorizontal: 16}}>
+              <ButtonCategory title="grandezza" />
+            </View>
+            <ButtonCategory title="misura" />
+          </View>
+          <Text style={style.categoryStyle}>
+            {/* //!category */}
+            Category: {route?.params.category}
+          </Text>
+        </View>
+        {/* //! quantity */}
         <Text style={style.qtk}>Quantity</Text>
         <View style={style.directionCount}>
-          <ButtonCustom
+          <ButtonCategory
             title="-"
             onPress={() => dispatch(decrementCount(count))}
-            colorBg={'#191970'}
           />
           <View style={{marginHorizontal: 8}}>
             <Text>{count}</Text>
           </View>
-          <ButtonCustom
+          <ButtonCategory
             title="+"
             onPress={() => dispatch(increaseCount(count))}
-            colorBg={'#191970'}
           />
-          <Text style={style.price}>{route?.params.price}</Text>
         </View>
+        <Text style={style.price}>{route?.params.price}</Text>
+
         <View
           style={{
             marginHorizontal: 16,
-            marginTop: 50,
+            marginTop: 10,
           }}>
           <ButtonCustom title="Aggiungi al carrello" />
         </View>

@@ -1,11 +1,12 @@
-import {View, Text} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import React, {FC} from 'react';
 import {Button, ButtonProps} from 'react-native-paper';
+import LinearGradient from 'react-native-linear-gradient';
 
 interface ButtonCustomProps extends ButtonProps {
-  title: string;
-  onPress: () => void;
-  colorBg: string;
+  title?: string;
+  onPress?: () => void;
+  colorBg?: string;
 }
 
 const ButtonCustom: FC<ButtonCustomProps> = ({
@@ -14,13 +15,23 @@ const ButtonCustom: FC<ButtonCustomProps> = ({
   colorBg = '#191970',
 }) => {
   return (
-    <Button
-      buttonColor={colorBg}
-      onPress={onPress}
-      mode="contained"
-      textColor="white">
-      {title}
-    </Button>
+    <TouchableOpacity onPress={onPress}>
+      <LinearGradient
+        style={{padding: 24, borderRadius: 8, minWidth: '100%'}}
+        colors={['#0000ff', '#8a2be2']}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}>
+        <Text
+          style={{
+            color: 'white',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            fontSize: 16,
+          }}>
+          {title}
+        </Text>
+      </LinearGradient>
+    </TouchableOpacity>
   );
 };
 

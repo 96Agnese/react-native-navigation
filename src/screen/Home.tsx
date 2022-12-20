@@ -23,12 +23,14 @@ import {setName, increaseAge, getAlbum} from '../redux/action';
 import {StoreState} from '../redux/store';
 import {UserState} from '../redux/reducer';
 import {getProduct} from '../redux/detail/actionDetail';
+import {ProductState} from '../redux/detail/reducerDetail';
 
 type HomeProps = NativeStackScreenProps<RouteParams, 'Home'>;
 
 const Home = ({navigation, route}: HomeProps) => {
   const [showWarming, setShowWarning] = useState(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [onClick, setOnClick] = useState();
 
   const {name, age} = useSelector<StoreState, UserState>(
     state => state.userReducer,
@@ -118,38 +120,39 @@ const Home = ({navigation, route}: HomeProps) => {
   };
 
   const style = StyleSheet.create({
-    input: {
-      borderWidth: 1,
-      borderColor: `#20b2aa`,
-      padding: 10,
-      borderRadius: 8,
-      backgroundColor: '#fff',
+    cardStyle: {
+      borderRadius: 16,
+      paddingHorizontal: 8,
+      marginVertical: 16,
+    },
+    title: {
+      fontSize: 30,
+      fontWeight: 'bold',
       marginTop: 16,
-      minWidth: '50%',
-      marginBottom: 24,
+      color: 'grey',
+    },
+    bgCard: {
+      borderRadius: 20,
+      padding: 16,
+    },
+    img: {
+      height: 150,
+      width: 150,
+      flex: 1,
+    },
+    price: {
+      fontWeight: 'bold',
+      color: 'grey',
+      marginTop: 8,
+      fontSize: 16,
     },
   });
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        <View
-          style={{
-            height: 60,
-            backgroundColor: 'blue',
-            borderRadius: 16,
-            paddingHorizontal: 8,
-            marginVertical: 16,
-          }}>
-          <Text
-            style={{
-              fontSize: 30,
-              fontWeight: 'bold',
-              marginTop: 16,
-              color: 'white',
-            }}>
-            PRODOTTI
-          </Text>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#faf0e6'}}>
+      <View style={{marginHorizontal: 16}}>
+        <View style={style.cardStyle}>
+          <Text style={style.title}>PRODOTTI</Text>
         </View>
         {/* <Pressable
           onPress={onPressHandler}
@@ -269,7 +272,6 @@ const Home = ({navigation, route}: HomeProps) => {
               {submitted ? 'registrata' : 'clicca per registrarti'}
             </Text>
           </Pressable>
-      
           {submitted ? <Text>Il tuo nome è {name} </Text> : null}
         </View> */}
       </View>
@@ -283,33 +285,34 @@ const Home = ({navigation, route}: HomeProps) => {
           <TouchableOpacity
             style={{
               flex: 1,
-              marginRight: index % 2 === 0 ? 4 : 0,
-              marginLeft: index % 2 === 0 ? 0 : 4,
+              marginRight: index % 2 === 0 ? 8 : 0,
+              marginLeft: index % 2 === 0 ? 0 : 8,
             }}
-            onPress={() =>
+            onPress={() => {
               navigation.navigate('DetailAlbum', {
                 title: item.title,
                 image: item.image,
                 description: item.description,
                 price: item.price,
                 category: item.category,
-              })
-            }>
+              });
+              setOnClick(!onClick);
+            }}>
             <View
-              style={{
-                borderColor: `#b0e0e6`,
-                borderWidth: 3,
-                borderRadius: 16,
-              }}>
+              style={[
+                style.bgCard,
+                {backgroundColor: onClick ? 'pink' : 'white'},
+              ]}>
               <ImageBackground
                 resizeMode="contain"
                 source={{uri: item.image}}
-                style={{
-                  height: 150,
-                  width: 150,
-                  flex: 1,
-                }}></ImageBackground>
+                style={style.img}
+              />
             </View>
+            <Text style={{fontWeight: 'bold', fontSize: 16, marginTop: 8}}>
+              {item.title}
+            </Text>
+            <Text style={style.price}>Price: {item.price}</Text>
           </TouchableOpacity>
         )}
       />
