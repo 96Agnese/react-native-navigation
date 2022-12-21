@@ -13,6 +13,10 @@ interface Action<T, P> {
 }
 
 function taskReducer(state = initialState, action: Action<any, any>) {
+  //! {
+  //! type: SET_TASK_ID,
+  //! payload: tasksID,
+  //! };
   switch (action.type) {
     case SET_TASK:
       return {...state, tasks: action.payload};

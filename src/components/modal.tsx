@@ -1,18 +1,28 @@
 import {View, Text, Modal, Pressable} from 'react-native';
-import React, {FC, useState} from 'react';
+import React, {FC, ReactNode, useState} from 'react';
 
-interface ModalComponnetProps {}
+interface ModalComponnetProps {
+  children: ReactNode;
+  modalVisible: boolean;
+  setModalVisible?: ((value: boolean) => void) | undefined;
+}
 
-const ModalComponnet: FC<ModalComponnetProps> = () => {
-  const [showWarming, setShowWarning] = useState(false);
+const ModalComponnet: FC<ModalComponnetProps> = ({
+  modalVisible,
+  setModalVisible,
+  children,
+}) => {
+  if (!modalVisible) {
+    return null;
+  }
 
   return (
     <Modal
       hardwareAccelerated
       animationType="fade"
       transparent
-      visible={showWarming}
-      onRequestClose={() => setShowWarning(false)}>
+      visible={modalVisible}
+      onRequestClose={() => setModalVisible?.(!modalVisible)}>
       <View
         style={{
           alignItems: 'center',
@@ -28,7 +38,8 @@ const ModalComponnet: FC<ModalComponnetProps> = () => {
             backgroundColor: '#fff',
             borderRadius: 20,
           }}>
-          <Text>WARNING</Text>
+          {children}
+          {/* <Text>WARNING</Text>
           <Text>3 CHARACTER</Text>
           <Pressable onPress={() => setShowWarning(false)}>
             <Text
@@ -38,7 +49,7 @@ const ModalComponnet: FC<ModalComponnetProps> = () => {
               }}>
               OK
             </Text>
-          </Pressable>
+          </Pressable> */}
         </View>
       </View>
     </Modal>

@@ -13,21 +13,22 @@ import FontAwesome, {
   ImageBackground,
 } from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
-import Theme from '../styles/Theme';
+import Theme from '../../util/Theme';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RouteParams} from '../../App';
+import {RouteParams} from '../../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ButtonCustom from '../components/button';
+import ButtonCustom from '../../components/button';
 import {useDispatch, useSelector} from 'react-redux';
-import {setName, increaseAge, getAlbum} from '../redux/action';
-import {StoreState} from '../redux/store';
-import {UserState} from '../redux/reducer';
-import {getProduct} from '../redux/detail/actionDetail';
-import {ProductState} from '../redux/detail/reducerDetail';
+import {setName, increaseAge} from '../../redux/login/actionLogin';
+import {StoreState} from '../../redux/store';
+import {UserState} from '../../redux/login/reducerLogin';
+import {getProduct} from '../../redux/detail-product/actionDetail';
+import {ProductState} from '../../redux/detail-product/reducerDetail';
+import {getAlbum} from '../../redux/product/actionProduct';
 
-type HomeProps = NativeStackScreenProps<RouteParams, 'Home'>;
+type ListProduct = NativeStackScreenProps<RouteParams, 'Home'>;
 
-const Home = ({navigation, route}: HomeProps) => {
+const ListProduct = ({navigation, route}: ListProduct) => {
   const [showWarming, setShowWarning] = useState(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [onClick, setOnClick] = useState();
@@ -289,7 +290,7 @@ const Home = ({navigation, route}: HomeProps) => {
               marginLeft: index % 2 === 0 ? 0 : 8,
             }}
             onPress={() => {
-              navigation.navigate('DetailAlbum', {
+              navigation.navigate('DetailProduct', {
                 title: item.title,
                 image: item.image,
                 description: item.description,
@@ -320,4 +321,4 @@ const Home = ({navigation, route}: HomeProps) => {
   );
 };
 
-export default Home;
+export default ListProduct;

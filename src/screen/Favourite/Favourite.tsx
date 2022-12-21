@@ -1,7 +1,7 @@
 import {View, Text, Pressable} from 'react-native';
 import React from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RouteParams} from '../../App';
+import {RouteParams} from '../../../App';
 
 type FavouriteProps = NativeStackScreenProps<RouteParams, 'Favourite'>;
 

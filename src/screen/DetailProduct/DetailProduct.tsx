@@ -13,19 +13,19 @@ import {
 import React, {useEffect, useState} from 'react';
 import {Item} from 'react-native-paper/lib/typescript/components/Drawer/Drawer';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RouteParams} from '../../App';
-import ButtonCustom from '../components/button';
+import {RouteParams} from '../../../App';
+import ButtonCustom from '../../components/button';
 import {useDispatch, useSelector} from 'react-redux';
-import {StoreState} from '../redux/store';
-import {ProductState} from '../redux/detail/reducerDetail';
+import {StoreState} from '../../redux/store';
+import {ProductState} from '../../redux/detail-product/reducerDetail';
 import {
   decrementCount,
   getProduct,
   increaseCount,
-} from '../redux/detail/actionDetail';
-import {UserState} from '../redux/reducer';
+} from '../../redux/detail-product/actionDetail';
+import {UserState} from '../../redux/login/reducerLogin';
 import {counter} from '@fortawesome/fontawesome-svg-core';
-import ButtonCategory from '../components/buttonCategory';
+import ButtonCategory from '../../components/buttonCategory';
 
 type DetailProps = NativeStackScreenProps<RouteParams, 'DetailAlbum'>;
 

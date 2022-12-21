@@ -5,20 +5,22 @@ import {
   TextInput,
   Alert,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import Button from '../components/button';
+import Button from '../../components/button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {setAge, setName} from '../redux/action';
-import {UserState} from '../redux/reducer';
-import {StoreState} from '../redux/store';
-import ButtonCustom from '../components/button';
+import {setAge, setName} from '../../redux/login/actionLogin';
+import {UserState} from '../../redux/login/reducerLogin';
+import {StoreState} from '../../redux/store';
+import ButtonCustom from '../../components/button';
 
 import * as Animatable from 'react-native-animatable';
+import ModalComponnet from '../../components/modal';
 
 const Login = ({navigation}) => {
-  const [isValid, setIsValid] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const {name, age} = useSelector<StoreState, UserState>(
     state => state.userReducer,
@@ -96,7 +98,8 @@ const Login = ({navigation}) => {
   const setData = async () => {
     console.log({name, age});
     if (name.length === 0 || age === 0) {
-      Alert.alert('Non hai riempito i campi');
+      setModalVisible(true);
+      console.log('mofal', name.length, age);
     } else {
       try {
         setName(name);
@@ -151,40 +154,57 @@ const Login = ({navigation}) => {
   });
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={{padding: 16}}>
-        <Text style={{fontSize: 16, fontWeight: 'bold'}}>LOGIN</Text>
-        {/* <Input
+    <>
+      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <View style={{padding: 16}}>
+          <Text style={{fontSize: 16, fontWeight: 'bold'}}>LOGIN</Text>
+          {/* <Input
           // error={submit.value}
           label="usarname"
           placeholder="ksks"
           // onChangeText={usarname.set}
         /> */}
-        <TextInput
-          placeholderTextColor={'grey'}
-          value={name}
-          autoCapitalize={'none'}
-          keyboardType="email-address"
-          onChangeText={value => dispatch(setName(value))}
-          placeholder="NOME"
-          style={style.input}
-        />
-        {/* {validateName(name)} */}
-        <TextInput
-          placeholderTextColor={'grey'}
-          onChangeText={value => dispatch(setAge(Number(value)))}
-          placeholder="ETA'"
-          style={style.input}
-        />
-      </View>
-      <View
-        style={{
-          alignItems: 'center',
-          marginHorizontal: 16,
-        }}>
-        <ButtonCustom title="Login" onPress={() => setData()} />
-      </View>
-    </SafeAreaView>
+          <TextInput
+            placeholderTextColor={'grey'}
+            value={name}
+            autoCapitalize={'none'}
+            keyboardType="email-address"
+            onChangeText={value => dispatch(setName(value))}
+            placeholder="NOME"
+            style={style.input}
+          />
+          {/* {validateName(name)} */}
+          <TextInput
+            placeholderTextColor={'grey'}
+            onChangeText={value => dispatch(setAge(Number(value)))}
+            placeholder="ETA'"
+            style={style.input}
+          />
+        </View>
+        <View
+          style={{
+            alignItems: 'center',
+            marginHorizontal: 16,
+          }}>
+          <ButtonCustom
+            title="Login"
+            onPress={() => {
+              setData();
+            }}
+          />
+        </View>
+      </SafeAreaView>
+      <ModalComponnet
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}>
+        <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+          <Text>Mancano dei campi !</Text>
+        </View>
+        <TouchableOpacity onPress={() => setModalVisible(false)}>
+          <Text style={{textAlign: 'center', fontWeight: 'bold'}}>OK</Text>
+        </TouchableOpacity>
+      </ModalComponnet>
+    </>
   );
 };
 

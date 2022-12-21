@@ -10,32 +10,29 @@
 
 import {NavigationContainer, ParamListBase} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {Image, StyleSheet, Text, useColorScheme} from 'react-native';
+import {Image, Text, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import home from './src/assets/home.png';
-
-import Home from './src/screen/Home';
-import Favourite from './src/screen/Favourite';
-import Login from './src/screen/Login';
-import DetailAlbum from './src/screen/DetailAlbum';
+import Favourite from './src/screen/Favourite/Favourite';
+import Login from './src/screen/Login/Login';
+import DetailProduct from './src/screen/DetailProduct/DetailProduct';
+import ToDo from './src/screen/ToDo/ToDo';
+import ListProduct from './src/screen/ListProduct/ListProduct';
 
 import {Provider} from 'react-redux';
-import {useSelector, useDispatch} from 'react-redux';
-import {setName, setAge} from './src/redux/action';
 import {Store} from './src/redux/store';
+import Task from './src/screen/Task/Task';
+import Done from './src/screen/Done/Done';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import MyTabs from './src/BottomTabs/MainTabs';
-import MainTabs from './src/BottomTabs/MainTabs';
-import Map from './src/screen/Map';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import ToDo from './src/screen/ToDo';
-import Task from './src/screen/Task';
+
+import home from './src/assets/home.png';
+import checkActive from './src/assets/checkActive.png';
 
 export interface RouteParams extends ParamListBase {
+  Done: undefined;
   Task: undefined;
   ToDo: undefined;
   Favourite: {ItemName: string; ItemId: number};
@@ -62,14 +59,28 @@ function HomeTabs() {
         tabBarStyle: {
           backgroundColor: 'white',
           height: 100,
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
         },
       })}>
-      <Tab.Screen name="Home" component={Home} options={{}}></Tab.Screen>
-      <Tab.Screen name="ToDo" component={ToDo}></Tab.Screen>
+      <Tab.Screen
+        name="Prodotti"
+        component={ListProduct}
+        options={{tabBarIcon: ({color}) => <Image source={home} />}}
+      />
+      <Tab.Screen name="ToDo" component={ToDo} />
+      <Tab.Screen
+        name="Done"
+        component={Done}
+        options={{
+          tabBarIcon: ({color}) => <Image source={checkActive} />,
+        }}
+      />
       <Tab.Screen
         name="Favourite"
         component={Favourite}
-        initialParams={{ItemName: 'passaggio dati', ItemId: 12}}></Tab.Screen>
+        initialParams={{ItemName: 'passaggio dati', ItemId: 12}}
+      />
     </Tab.Navigator>
   );
 }
@@ -119,8 +130,8 @@ const App = () => {
           />
 
           <RootStack.Screen
-            name="DetailAlbum"
-            component={DetailAlbum}
+            name="DetailProduct"
+            component={DetailProduct}
             options={{
               headerBackTitleVisible: false,
               headerShadowVisible: false,
@@ -138,14 +149,6 @@ const App = () => {
 
             // initialParams={{ItemName: 'passaggio dati', ItemId: 12}}
           />
-          {/* <Stack.Screen
-            name="MainTabs"
-            component={MainTabs}
-            options={{
-              headerShown: false,
-              headerLeft: () => false,
-            }}
-          /> */}
         </RootStack.Navigator>
       </NavigationContainer>
     </Provider>
