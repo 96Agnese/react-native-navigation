@@ -10,7 +10,7 @@
 
 import {NavigationContainer, ParamListBase} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {Image, Text, useColorScheme} from 'react-native';
+import {Image, Text, TouchableOpacity, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
@@ -35,9 +35,17 @@ export interface RouteParams extends ParamListBase {
   Done: undefined;
   Task: undefined;
   ToDo: undefined;
-  Favourite: {ItemName: string; ItemId: number};
+  Favourite: {
+    ItemName: string;
+    ItemId: number;
+    screenNumber: number;
+    movie: {
+      title: string;
+      des: string;
+    };
+  };
   Home: {message: string; title: string; thumbnailUrl: string};
-  DetailAlbum: {
+  ListProduct: {
     title: string;
     image: string;
     description: string;
@@ -45,19 +53,21 @@ export interface RouteParams extends ParamListBase {
     category: string;
   };
 }
+// / creo l'instanza che mi da la root
 const RootStack = createNativeStackNavigator<RouteParams>();
-//! bottom tab
+// / bottom tab
 const Tab = createBottomTabNavigator();
 
 function HomeTabs() {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
-        tabBarLabelStyle: {fontSize: 16},
+        tabBarInactiveBackgroundColor: '#fff0f5',
+        tabBarActiveBackgroundColor: 'pink',
         tabBarInactiveTintColor: 'black',
-        tabBarActiveTintColor: 'blue',
+        tabBarActiveTintColor: '#9400d3',
         tabBarStyle: {
-          backgroundColor: 'white',
+          backgroundColor: '#fffaf0',
           height: 100,
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
@@ -66,20 +76,71 @@ function HomeTabs() {
       <Tab.Screen
         name="Prodotti"
         component={ListProduct}
-        options={{tabBarIcon: ({color}) => <Image source={home} />}}
+        options={{
+          headerShown: false,
+          tabBarLabel: ({focused, color}) => {
+            return (
+              <Text style={{color, fontWeight: focused ? 'bold' : 'normal'}}>
+                Prodotti
+              </Text>
+            );
+          },
+          tabBarIcon: ({color, focused, size}) => (
+            <Image
+              source={home}
+              style={{
+                tintColor: focused ? '#9400d3' : 'black',
+              }}
+            />
+          ),
+        }}
       />
-      <Tab.Screen name="ToDo" component={ToDo} />
+      <Tab.Screen
+        name="ToDo"
+        component={ToDo}
+        options={{
+          headerShown: false,
+
+          tabBarLabel: ({focused, color}) => {
+            return (
+              <Text style={{color, fontWeight: focused ? 'bold' : 'normal'}}>
+                ToDo
+              </Text>
+            );
+          },
+        }}
+      />
       <Tab.Screen
         name="Done"
         component={Done}
         options={{
-          tabBarIcon: ({color}) => <Image source={checkActive} />,
+          headerShown: false,
+
+          tabBarLabel: ({focused, color}) => {
+            return (
+              <Text style={{color, fontWeight: focused ? 'bold' : 'normal'}}>
+                Done
+              </Text>
+            );
+          },
+          tabBarIcon: ({color, focused}) => <Image source={checkActive} />,
         }}
       />
       <Tab.Screen
         name="Favourite"
         component={Favourite}
         initialParams={{ItemName: 'passaggio dati', ItemId: 12}}
+        options={{
+          headerShown: false,
+
+          tabBarLabel: ({focused, color}) => {
+            return (
+              <Text style={{color, fontWeight: focused ? 'bold' : 'normal'}}>
+                Favourite
+              </Text>
+            );
+          },
+        }}
       />
     </Tab.Navigator>
   );
@@ -120,12 +181,9 @@ const App = () => {
               headerStyle: {
                 backgroundColor: '#faf0e6',
               },
-
               headerShadowVisible: false,
               headerBackTitleVisible: false,
-              headerTitle: () => (
-                <Text style={{fontSize: 16}}>Dettaglio prodotto</Text>
-              ),
+              headerTitle: () => <Text style={{fontSize: 20}}>Prodotti</Text>,
             }}
           />
 
@@ -135,6 +193,9 @@ const App = () => {
             options={{
               headerBackTitleVisible: false,
               headerShadowVisible: false,
+              headerTitle: () => (
+                <Text style={{fontSize: 20}}>Dettaglio prodotti</Text>
+              ),
             }}
 
             // initialParams={{ItemName: 'passaggio dati', ItemId: 12}}

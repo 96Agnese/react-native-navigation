@@ -3,6 +3,7 @@ import {AnyAction, Dispatch} from 'redux';
 //!dichiaro le azioni
 
 export const GET_ALBUM = 'GET_ALBUM';
+export const SET_PRODUCTS = 'SET_TASK';
 
 // const API_URL = 'https://jsonplaceholder.typicode.com/todos';
 const API_URL = 'https://jsonplaceholder.typicode.com/photos';

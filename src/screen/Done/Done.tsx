@@ -11,10 +11,8 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {StoreState} from '../../redux/store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setTask, setTaskID} from '../../redux/task/actionTask';
+import {setTasks, setTaskID} from '../../redux/task/actionTask';
 import CheckBox from '@react-native-community/checkbox';
-
-const style = StyleSheet.create({});
 
 const Done = ({navigation}) => {
   const {tasks} = useSelector<StoreState>(state => state.taskReducer);
@@ -24,7 +22,7 @@ const Done = ({navigation}) => {
     const filteredTasks = tasks.filter(task => task.ID !== id);
     AsyncStorage.setItem('Tasks', JSON.stringify(filteredTasks))
       .then(() => {
-        dispatch(setTask(filteredTasks));
+        dispatch(setTasks(filteredTasks));
         Alert.alert('Success', 'Task removed');
       })
       .catch(err => console.log(err));
@@ -38,7 +36,7 @@ const Done = ({navigation}) => {
       newTasks[index].isSelected = newValue;
       AsyncStorage.setItem('Tasks', JSON.stringify(newTasks))
         .then(() => {
-          dispatch(setTask(newTasks));
+          dispatch(setTasks(newTasks));
           Alert.alert('Success! Task state is changed');
         })
         .catch(err => console.log(err));
@@ -47,6 +45,7 @@ const Done = ({navigation}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      <Text style={{textAlign: 'center', fontSize: 24}}>Cose fatte</Text>
       <FlatList
         keyExtractor={(item, index) => index.toString()}
         data={tasks.filter(task => task.isSelected === true)}

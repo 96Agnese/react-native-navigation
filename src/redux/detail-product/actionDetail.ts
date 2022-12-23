@@ -1,9 +1,26 @@
 import {AnyAction, Dispatch} from 'redux';
 
-export const GET_PRODUCT_DETAIL = 'GET_PRODUCT';
+export const SET_PRODUCTS = 'SET_PRODUCTS';
 
 export const INCREASE_COUNT = 'INCREASE';
 export const DECREMENT_COUNT = 'DECREMENT_COUNT';
+
+// favourite
+export const SET_FAVOURITE_ID = 'SET_PRODUCTS_ID';
+
+export const setFavouriteID = favouriteID => {
+  return {
+    type: SET_FAVOURITE_ID,
+    payload: favouriteID,
+  };
+};
+
+export const setProducts = favourite => {
+  return {
+    type: SET_PRODUCTS,
+    payload: favourite,
+  };
+};
 
 // const API_URL = 'https://jsonplaceholder.typicode.com/todos';
 const API_URL = 'https://fakestoreapi.com/products/';
@@ -20,7 +37,7 @@ export const getProduct = () => {
       const json = await result.json();
       if (json) {
         dispatch({
-          type: GET_PRODUCT_DETAIL,
+          type: SET_PRODUCTS,
           payload: json,
         });
       } else {

@@ -1,7 +1,8 @@
 import {
   DECREMENT_COUNT,
-  GET_PRODUCT_DETAIL,
   INCREASE_COUNT,
+  SET_FAVOURITE_ID,
+  SET_PRODUCTS,
 } from './actionDetail';
 
 //! dico cosa devono fare
@@ -18,6 +19,7 @@ interface Product {
   price: number;
   description: string;
   category: string;
+  favourite: boolean;
 }
 
 export interface ProductState {
@@ -41,8 +43,10 @@ function productReducer(
   action: Action<any, any>,
 ): ProductState {
   switch (action.type) {
-    case GET_PRODUCT_DETAIL:
+    case SET_PRODUCTS:
       return {...state, products: action.payload};
+    case SET_FAVOURITE_ID:
+      return {...state, favourite: action.payload};
     case INCREASE_COUNT:
       return {...state, count: state.count + 1};
     case DECREMENT_COUNT:

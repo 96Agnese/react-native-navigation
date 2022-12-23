@@ -2,19 +2,13 @@ import {
   View,
   Text,
   SafeAreaView,
-  Image,
-  FlatList,
-  TouchableOpacity,
   ImageBackground,
-  Pressable,
   ScrollView,
-  StyleSheet,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {Item} from 'react-native-paper/lib/typescript/components/Drawer/Drawer';
+import React, {useEffect} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RouteParams} from '../../../App';
-import ButtonCustom from '../../components/button';
+
 import {useDispatch, useSelector} from 'react-redux';
 import {StoreState} from '../../redux/store';
 import {ProductState} from '../../redux/detail-product/reducerDetail';
@@ -23,9 +17,11 @@ import {
   getProduct,
   increaseCount,
 } from '../../redux/detail-product/actionDetail';
-import {UserState} from '../../redux/login/reducerLogin';
-import {counter} from '@fortawesome/fontawesome-svg-core';
+
+import ButtonCustom from '../../components/button';
 import ButtonCategory from '../../components/buttonCategory';
+
+import style from '../DetailProduct/DetailProduct.styles';
 
 type DetailProps = NativeStackScreenProps<RouteParams, 'DetailAlbum'>;
 
@@ -39,60 +35,6 @@ const DetailAlbum = ({route, navigation}: DetailProps) => {
   useEffect(() => {
     getProduct()(dispatch);
   }, []);
-
-  const style = StyleSheet.create({
-    imgStyle: {
-      height: 200,
-      width: 200,
-      flex: 1,
-    },
-    title: {
-      marginHorizontal: 16,
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginTop: 32,
-    },
-    productStyle: {
-      marginHorizontal: 16,
-      marginTop: 16,
-      fontWeight: 'bold',
-    },
-    description: {
-      marginHorizontal: 16,
-      fontSize: 18,
-      marginTop: 16,
-    },
-    qtk: {
-      fontSize: 18,
-      marginTop: 16,
-      fontWeight: 'bold',
-      marginBottom: 16,
-      textAlign: 'center',
-    },
-    circleStyl: {
-      borderWidth: 1,
-      borderColor: 'grey',
-      borderRadius: 8,
-      padding: 8,
-      width: 35,
-      marginHorizontal: 16,
-    },
-    price: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-    directionCount: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginHorizontal: 16,
-      justifyContent: 'center',
-    },
-    categoryStyle: {
-      fontWeight: 'bold',
-      fontSize: 16,
-    },
-  });
 
   return (
     <ScrollView style={{flex: 1}}>
@@ -141,7 +83,7 @@ const DetailAlbum = ({route, navigation}: DetailProps) => {
             onPress={() => dispatch(increaseCount(count))}
           />
         </View>
-        <Text style={style.price}>{route?.params.price}</Text>
+        <Text style={style.price}>{route.params.price}</Text>
 
         <View
           style={{

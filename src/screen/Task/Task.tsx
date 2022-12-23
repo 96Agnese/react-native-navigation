@@ -11,15 +11,21 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ButtonCustom from '../../components/button';
+
 import {useDispatch, useSelector} from 'react-redux';
 import {StoreState} from '../../redux/store';
-import {setTask} from '../../redux/task/actionTask';
+import {setTasks} from '../../redux/task/actionTask';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import taskReducer from '../../redux/task/reducerTask';
+
 import CheckBox from '@react-native-community/checkbox';
+
 import checkActive from '../../assets/checkActive.png';
 import home from '../../assets/home.png';
+
 import ModalComponnet from '../../components/modal';
+
+import style from '../Task/Task.styles';
 
 const Task = ({navigation}) => {
   const {tasks, taskID} = useSelector<StoreState, taskReducer>(
@@ -34,6 +40,7 @@ const Task = ({navigation}) => {
   const [color, setColor] = useState('white');
   const [bellTime, setBellTime] = useState<number>(1);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [isCompleteForm, setIsCompleteForm] = useState<boolean>(false);
 
   useEffect(() => {
     getTask();
@@ -49,9 +56,9 @@ const Task = ({navigation}) => {
     }
   };
 
-  const setTasks = () => {
+  const setTask = () => {
     if (title.length === 0) {
-      Alert.alert('Warning');
+      setIsCompleteForm(true);
     } else {
       try {
         var Task = {
@@ -61,7 +68,7 @@ const Task = ({navigation}) => {
           isSelected: isSelected,
           color: color,
         };
-        const index = tasks.findIndex(task => task.ID === taskID);
+        const index = tasks.findIndex(tasks => tasks.ID === taskID);
         console.log('INDEX', index, taskID);
 
         let newTasks = [];
@@ -73,7 +80,7 @@ const Task = ({navigation}) => {
         }
         AsyncStorage.setItem('Task', JSON.stringify(newTasks))
           .then(() => {
-            dispatch(setTask(newTasks));
+            dispatch(setTasks(newTasks));
             Alert.alert('Success!!');
             navigation.goBack();
           })
@@ -83,79 +90,6 @@ const Task = ({navigation}) => {
       }
     }
   };
-
-  const style = StyleSheet.create({
-    white: {
-      backgroundColor: 'white',
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderTopLeftRadius: 16,
-      borderBottomLeftRadius: 16,
-    },
-    red: {
-      backgroundColor: 'red',
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    blue: {
-      backgroundColor: 'blue',
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    green: {
-      backgroundColor: 'green',
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderBottomRightRadius: 16,
-      borderTopRightRadius: 16,
-    },
-    alignCheck: {
-      alignItems: 'center',
-      marginBottom: 16,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      marginTop: 16,
-    },
-    title: {
-      width: '100%',
-      borderWidth: 1,
-      borderColor: 'grey',
-      padding: 16,
-      borderRadius: 8,
-      backgroundColor: '#fff',
-    },
-    desc: {
-      padding: 16,
-      width: '100%',
-      borderWidth: 1,
-      borderColor: 'grey',
-      borderRadius: 8,
-      backgroundColor: '#fff',
-      marginTop: 16,
-      marginBottom: 16,
-    },
-    containerColor: {
-      borderTopLeftRadius: 16,
-      borderBottomLeftRadius: 16,
-      borderTopRightRadius: 16,
-      borderBottomRightRadius: 16,
-      height: 50,
-      borderWidth: 1,
-      borderColor: 'black',
-      flexDirection: 'row',
-    },
-    input: {
-      height: 50,
-      borderWidth: 1,
-      width: 50,
-      borderRadius: 8,
-      marginVertical: 16,
-    },
-  });
 
   return (
     <SafeAreaView style={{margin: 16}}>
@@ -238,6 +172,24 @@ const Task = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </ModalComponnet>
+      {/* // / modal */}
+      <ModalComponnet
+        modalVisible={isCompleteForm}
+        setModalVisible={setIsCompleteForm}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            flex: 1,
+          }}>
+          <Text style={{fontWeight: 'bold', fontSize: 16}}>
+            Completa i campi !
+          </Text>
+          <TouchableOpacity onPress={() => setIsCompleteForm(false)}>
+            <Text style={{fontWeight: 'bold', fontSize: 16}}>OK</Text>
+          </TouchableOpacity>
+        </View>
+      </ModalComponnet>
       <TextInput
         value={title}
         onChangeText={value => setTitle(value)}
@@ -284,7 +236,7 @@ const Task = ({navigation}) => {
         />
         <Text style={{marginLeft: 8, fontWeight: 'bold'}}>Is done</Text>
       </View>
-      <ButtonCustom title="Save task" onPress={() => setTasks()} />
+      <ButtonCustom title="Save task" onPress={() => setTask()} />
     </SafeAreaView>
   );
 };
